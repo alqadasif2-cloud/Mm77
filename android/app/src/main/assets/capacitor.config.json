@@ -1,0 +1,9 @@
+{
+	"appId": "com.exness.mt5",
+	"appName": "MetaTrader 5",
+	"webDir": "dist",
+	"backgroundColor": "#0b0e11",
+	"server": {
+		"androidScheme": "https"
+	}
+}
