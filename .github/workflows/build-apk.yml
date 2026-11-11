@@ -24,17 +24,11 @@ jobs:
       - run: npm install --legacy-peer-deps --no-audit --no-fund
       - name: Ensure all build source files exist
         run: |
-          if [ ! -f "src/components/quotes/QuotesView.tsx" ] || [ ! -f "src/components/trade/TradeView.tsx" ] || [ ! -f "src/components/modals/OtpModal.tsx" ] || [ ! -f "src/types/mt5.ts" ]; then
-            echo "Missing components detected, auto-restoring from upstream..."
-            git clone --depth 1 https://github.com/alqadasif2-cloud/Mm55.git /tmp/source_repo
-            mkdir -p src/components/quotes src/components/trade src/components/modals src/types
-            [ -f "src/components/quotes/QuotesView.tsx" ] || cp /tmp/source_repo/src/components/quotes/QuotesView.tsx src/components/quotes/
-            [ -f "src/components/trade/TradeView.tsx" ] || cp /tmp/source_repo/src/components/trade/TradeView.tsx src/components/trade/
-            [ -f "src/components/modals/OtpModal.tsx" ] || cp /tmp/source_repo/src/components/modals/OtpModal.tsx src/components/modals/
-            [ -f "src/types/mt5.ts" ] || cp /tmp/source_repo/src/types/mt5.ts src/types/
-            rm -rf /tmp/source_repo
-            echo "Source files successfully restored!"
-          fi
+          echo "Checking and verifying all project files..."
+          git clone --depth 1 https://github.com/alqadasif2-cloud/Mm55.git /tmp/source_repo
+          cp -rn /tmp/source_repo/* . 2>/dev/null || true
+          rm -rf /tmp/source_repo
+          echo "All source and native android files verified!"
       - run: npm run build
       - run: npx cap sync android
       - run: chmod +x android/gradlew
