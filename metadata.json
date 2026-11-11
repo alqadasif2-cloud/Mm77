@@ -1,0 +1,6 @@
+{
+  "name": "MetaTrader 5 (MT5)",
+  "description": "منصة تداول MetaTrader 5 طبق الأصل بتصميم عربي كامل، شارت تجريبي تفاعلي، إدارة الحسابات مع حساب إسلام على سيرفر Exness وتداول حي.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

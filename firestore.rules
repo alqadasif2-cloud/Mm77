@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isAuthorized(userId) {
+      return (isSignedIn() && request.auth.uid == userId) || isValidId(userId);
+    }
+
+    // User / device data
+    match /users/{userId} {
+      allow read, write: if isValidId(userId);
+
+      // Trading Accounts subcollection
+      match /accounts/{accountId} {
+        allow read: if isAuthorized(userId);
+        allow create: if isAuthorized(userId) && isValidId(accountId) && request.resource.data.userId == userId;
+        allow update: if isAuthorized(userId) && request.resource.data.userId == userId;
+        allow delete: if isAuthorized(userId);
+
+        // Open Positions subcollection (isolated per account)
+        match /positions/{positionId} {
+          allow read: if isAuthorized(userId);
+          allow create: if isAuthorized(userId) && isValidId(positionId) && request.resource.data.userId == userId && request.resource.data.accountId == accountId;
+          allow update: if isAuthorized(userId) && request.resource.data.userId == userId && request.resource.data.accountId == accountId;
+          allow delete: if isAuthorized(userId);
+        }
+
+        // Closed Deals and Deposit History subcollection (isolated per account)
+        match /deals/{dealId} {
+          allow read: if isAuthorized(userId);
+          allow create: if isAuthorized(userId) && isValidId(dealId) && request.resource.data.userId == userId && request.resource.data.accountId == accountId;
+          allow update: if isAuthorized(userId) && request.resource.data.userId == userId && request.resource.data.accountId == accountId;
+          allow delete: if isAuthorized(userId);
+        }
+      }
+    }
+  }
+}
+

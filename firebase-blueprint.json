@@ -1,0 +1,102 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile metadata",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["uid"]
+    },
+    "Account": {
+      "title": "Account",
+      "description": "Trading account information and capital balance",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 100 },
+        "broker": { "type": "string", "maxLength": 100 },
+        "server": { "type": "string", "maxLength": 100 },
+        "accountNumber": { "type": "string", "maxLength": 30 },
+        "balance": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "type": { "type": "string", "enum": ["real", "demo"] },
+        "leverage": { "type": "string", "maxLength": 20 },
+        "logoType": { "type": "string", "enum": ["exness", "metaquotes"] },
+        "lastKnownLabel": { "type": "string", "maxLength": 100 },
+        "userId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "accountNumber", "balance", "currency", "type", "userId"]
+    },
+    "Position": {
+      "title": "Position",
+      "description": "Open trade position for an account",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "ticket": { "type": "number" },
+        "symbol": { "type": "string", "maxLength": 20 },
+        "type": { "type": "string", "enum": ["buy", "sell"] },
+        "lots": { "type": "number" },
+        "openPrice": { "type": "number" },
+        "currentPrice": { "type": "number" },
+        "sl": { "type": "number" },
+        "tp": { "type": "number" },
+        "swap": { "type": "number" },
+        "commission": { "type": "number" },
+        "profit": { "type": "number" },
+        "openTime": { "type": "string", "maxLength": 30 },
+        "accountId": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "ticket", "symbol", "type", "lots", "openPrice", "accountId", "userId"]
+    },
+    "Deal": {
+      "title": "Deal",
+      "description": "Closed trade deal or balance transaction history",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "ticket": { "type": "number" },
+        "symbol": { "type": "string", "maxLength": 20 },
+        "type": { "type": "string", "enum": ["buy", "sell", "deposit"] },
+        "lots": { "type": "number" },
+        "openPrice": { "type": "number" },
+        "closePrice": { "type": "number" },
+        "sl": { "type": "number" },
+        "tp": { "type": "number" },
+        "swap": { "type": "number" },
+        "commission": { "type": "number" },
+        "profit": { "type": "number" },
+        "openTime": { "type": "string", "maxLength": 30 },
+        "closeTime": { "type": "string", "maxLength": 30 },
+        "accountId": { "type": "string", "maxLength": 64 },
+        "comment": { "type": "string", "maxLength": 100 },
+        "userId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "ticket", "symbol", "type", "lots", "profit", "accountId", "userId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document"
+    },
+    "/users/{userId}/accounts/{accountId}": {
+      "schema": "Account",
+      "description": "User trading accounts collection"
+    },
+    "/users/{userId}/accounts/{accountId}/positions/{positionId}": {
+      "schema": "Position",
+      "description": "Open trades positions collection isolated per account"
+    },
+    "/users/{userId}/accounts/{accountId}/deals/{dealId}": {
+      "schema": "Deal",
+      "description": "Closed deals history collection isolated per account"
+    }
+  }
+}

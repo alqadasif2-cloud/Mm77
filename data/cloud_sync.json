@@ -1,0 +1,13 @@
+{
+  "client_demo": {
+    "accounts": [
+      {
+        "id": "1",
+        "name": "Test"
+      }
+    ],
+    "positions": [],
+    "historyDeals": [],
+    "updatedAt": "2026-11-11T03:52:39.642Z"
+  }
+}
